@@ -1,257 +1,264 @@
+import { useState } from 'react';
 import {
   Box,
   Flex,
+  Heading,
   Text,
   Button,
   Image,
-  SimpleGrid,
-  Heading,
+  Grid,
   VStack,
-  Link,
-  Divider,
-  IconButton,
   HStack,
+  IconButton,
   useDisclosure,
-  Stack,
-} from "@chakra-ui/react";
-import { FaFacebook, FaInstagram, FaTwitter, FaStar, FaBars, FaTimes } from "react-icons/fa";
+  Drawer,
+  DrawerBody,
+  DrawerHeader,
+  DrawerOverlay,
+  DrawerContent,
+  DrawerCloseButton,
+  useColorModeValue,
+} from '@chakra-ui/react';
+import { FaStar, FaBars, FaTimes, FaShoppingCart, FaLeaf, FaSun, FaWater } from 'react-icons/fa';
 
 const reviews = [
-  {
-    name: "John Doe",
-    photo: "https://via.placeholder.com/150",
-    review: "Amazing quality! Really satisfied with the purchase.",
-    rating: 5,
-  },
-  {
-    name: "Jane Smith",
-    photo: "https://via.placeholder.com/150",
-    review: "The product is decent but the shipping took too long.",
-    rating: 3,
-  },
-  {
-    name: "Raj Patel",
-    photo: "https://via.placeholder.com/150",
-    review: "Great customer service and good value for money!",
-    rating: 4,
-  },
-  {
-    name: "Priya Sharma",
-    photo: "https://via.placeholder.com/150",
-    review: "Loved it! Will definitely shop again.",
-    rating: 5,
-  },
+  { id: 1, name: 'John Doe', rating: 5, text: 'Absolutely love it!', photo: 'https://picsum.photos/seed/review1/50/50' },
+  { id: 2, name: 'Jane Smith', rating: 4, text: 'Great quality, fast shipping.', photo: 'https://picsum.photos/seed/review2/50/50' },
+  { id: 3, name: 'Mike Johnson', rating: 5, text: 'Excellent customer service!', photo: 'https://picsum.photos/seed/review3/50/50' },
+  { id: 4, name: 'Sarah Brown', rating: 4, text: 'Very satisfied with my purchase.', photo: 'https://picsum.photos/seed/review4/50/50' },
 ];
 
-const HomePage = () => {
+const App = () => {
   const { isOpen, onOpen, onClose } = useDisclosure();
+  const [displayBanner, setDisplayBanner] = useState(true);
+
+  const bgGradient = useColorModeValue(
+    'linear(to-r, teal.300, blue.500)',
+    'linear(to-r, teal.500, blue.600)'
+  );
+  const cardBg = useColorModeValue('white', 'gray.700');
+  const textColor = useColorModeValue('gray.600', 'gray.200');
 
   return (
     <Box>
-      {/* Navbar */}
-      <Box bg="gray.100" px={{ base: 4, md: 10 }} py={4}>
-        <Flex justifyContent="space-between" alignItems="center">
-          <Heading size="lg">ShopLogo</Heading>
-          
-          {/* Hamburger menu for mobile */}
-          <IconButton
-            display={{ base: "block", md: "none" }}
-            onClick={isOpen ? onClose : onOpen}
-            icon={isOpen ? <FaTimes /> : <FaBars />}
-            variant="ghost"
-            aria-label="Toggle Navigation"
-          />
-
-          {/* Desktop Links */}
-          <HStack
-            spacing={6}
-            display={{ base: "none", md: "flex" }}
-          >
-            <Link href="#">Home</Link>
-            <Link href="#">Shop</Link>
-            <Link href="#">About</Link>
-            <Link href="#">Contact</Link>
-          </HStack>
+      {/* Header */}
+      <Flex
+        as="header"
+        align="center"
+        justify="space-between"
+        wrap="wrap"
+        padding="1.5rem"
+        bgGradient={bgGradient}
+        color="white"
+      >
+        <Flex align="center" mr={5}>
+          <Heading as="h1" size="lg" fontWeight="bold">
+            EcoShop
+          </Heading>
         </Flex>
 
-        {/* Mobile Menu */}
-        {isOpen && (
-          <Box pb={4} display={{ base: "block", md: "none" }}>
-            <Stack as="nav" spacing={4}>
-              <Link href="#">Home</Link>
-              <Link href="#">Shop</Link>
-              <Link href="#">About</Link>
-              <Link href="#">Contact</Link>
-            </Stack>
-          </Box>
-        )}
-      </Box>
+        <Box display={{ base: 'block', md: 'none' }}>
+          <IconButton
+            onClick={onOpen}
+            icon={<FaBars />}
+            variant="outline"
+            colorScheme="whiteAlpha"
+            aria-label="Open menu"
+          />
+        </Box>
 
-      {/* Hero Section */}
-      <Flex
-        bg="gray.200"
-        align="center"
-        justify="center"
-        minHeight="70vh"
-        direction={{ base: "column", md: "row" }}
-        px={10}
-        py={10}
-        textAlign={{ base: "center", md: "left" }}
-      >
-        <VStack spacing={4} align="start" flex="1" maxW="500px">
-          <Heading size="2xl" lineHeight="shorter">
-            Discover the Latest Trends
-          </Heading>
-          <Text fontSize="lg" color="gray.600">
-            Find your style with our exclusive collection of clothing and
-            accessories.
-          </Text>
-          <Button colorScheme="teal" size="lg">
-            Shop Now
-          </Button>
-        </VStack>
-        <Image
-          src="https://via.placeholder.com/500"
-          alt="Fashion Banner"
-          boxSize={{ base: "300px", md: "400px", lg: "500px" }}
-          objectFit="cover"
-          mt={{ base: 8, md: 0 }}
-        />
+        <Box
+          display={{ base: 'none', md: 'flex' }}
+          width={{ base: 'full', md: 'auto' }}
+          alignItems="center"
+          flexGrow={1}
+        >
+          <Button variant="ghost" colorScheme="whiteAlpha" mr={3}>Home</Button>
+          <Button variant="ghost" colorScheme="whiteAlpha" mr={3}>Products</Button>
+          <Button variant="ghost" colorScheme="whiteAlpha" mr={3}>About</Button>
+          <Button variant="ghost" colorScheme="whiteAlpha">Contact</Button>
+        </Box>
+
+        <Box>
+          <IconButton
+            icon={<FaShoppingCart />}
+            variant="ghost"
+            colorScheme="whiteAlpha"
+            aria-label="Shopping cart"
+          />
+        </Box>
       </Flex>
 
-      {/* Product Categories */}
-      <Box bg="gray.50" py={10} px={{ base: 4, md: 10 }}>
-        <Heading textAlign="center" mb={8}>
-          Shop by Category
-        </Heading>
-        <SimpleGrid columns={{ base: 2, md: 4 }} spacing={6}>
-          {["Clothing", "Shoes", "Accessories", "Bags"].map((category) => (
-            <Box key={category} textAlign="center">
-              <Image
-                src={`https://via.placeholder.com/200?text=${category}`}
-                alt={category}
-                borderRadius="md"
-                mb={4}
-              />
-              <Text fontSize="lg" fontWeight="bold">
-                {category}
-              </Text>
-            </Box>
-          ))}
-        </SimpleGrid>
-      </Box>
+      {/* Mobile Menu */}
+      <Drawer isOpen={isOpen} placement="right" onClose={onClose}>
+        <DrawerOverlay />
+        <DrawerContent bgGradient={bgGradient} color="white">
+          <DrawerCloseButton />
+          <DrawerHeader>Menu</DrawerHeader>
+          <DrawerBody>
+            <VStack spacing={4}>
+              <Button w="100%" variant="ghost" colorScheme="whiteAlpha" onClick={onClose}>Home</Button>
+              <Button w="100%" variant="ghost" colorScheme="whiteAlpha" onClick={onClose}>Products</Button>
+              <Button w="100%" variant="ghost" colorScheme="whiteAlpha" onClick={onClose}>About</Button>
+              <Button w="100%" variant="ghost" colorScheme="whiteAlpha" onClick={onClose}>Contact</Button>
+            </VStack>
+          </DrawerBody>
+        </DrawerContent>
+      </Drawer>
 
-      {/* Featured Products */}
-      <Box py={10} px={{ base: 4, md: 10 }}>
-        <Heading textAlign="center" mb={8}>
-          Featured Products
-        </Heading>
-        <SimpleGrid columns={{ base: 2, md: 4 }} spacing={8}>
-          {[1, 2, 3, 4].map((product) => (
-            <Box key={product} p={4} borderWidth="1px" borderRadius="md">
-              <Image
-                src="https://via.placeholder.com/200"
-                alt={`Product ${product}`}
-                mb={4}
-                borderRadius="md"
-              />
-              <Text fontWeight="bold">Product {product}</Text>
-              <Text color="gray.500">Rs. 999</Text>
-              <Button mt={4} colorScheme="teal" width="full">
-                Add to Cart
+      {/* Main Content */}
+      <Box as="main" p={4} bg="gray.50">
+        {/* Banner */}
+        {displayBanner && (
+          <Flex
+            bg="green.400"
+            color="white"
+            p={4}
+            align="center"
+            justify="space-between"
+            mb={4}
+            borderRadius="md"
+            boxShadow="md"
+          >
+            <HStack spacing={2}>
+              <FaLeaf />
+              <Text fontWeight="bold">Eco-Friendly Sale: 20% off all sustainable products!</Text>
+            </HStack>
+            <IconButton
+              icon={<FaTimes />}
+              size="sm"
+              variant="ghost"
+              onClick={() => setDisplayBanner(false)}
+              aria-label="Close banner"
+            />
+          </Flex>
+        )}
+
+        {/* Hero Section */}
+        <Box
+          borderRadius="lg"
+          overflow="hidden"
+          mb={8}
+          boxShadow="xl"
+          position="relative"
+        >
+          <Image src="https://picsum.photos/1200/400" alt="Hero Image" w="100%" h="400px" objectFit="cover" />
+          <Box
+            position="absolute"
+            top="0"
+            left="0"
+            w="100%"
+            h="100%"
+            bg="rgba(0,0,0,0.4)"
+            display="flex"
+            alignItems="center"
+            justifyContent="center"
+          >
+            <VStack spacing={4} textAlign="center">
+              <Heading as="h2" size="2xl" color="white">
+                Welcome to EcoShop
+              </Heading>
+              <Text fontSize="xl" color="white">
+                Discover eco-friendly products for a sustainable lifestyle
+              </Text>
+              <Button colorScheme="green" size="lg" leftIcon={<FaLeaf />}>
+                Shop Green
               </Button>
-            </Box>
-          ))}
-        </SimpleGrid>
-      </Box>
+            </VStack>
+          </Box>
+        </Box>
 
-      {/* Reviews Section */}
-      <Box py={10} px={{ base: 4, md: 10 }} bg="gray.50">
-        <Heading textAlign="center" mb={8}>
-          Customer Reviews
-        </Heading>
-        <SimpleGrid columns={{ base: 1, md: 2, lg: 4 }} spacing={8}>
-          {reviews.map((review, index) => (
-            <Box
-              key={index}
-              p={6}
-              borderWidth="1px"
-              borderRadius="lg"
-              bg="white"
-              shadow="md"
-              textAlign="center"
-            >
-              <Image
-                src={review.photo}
-                alt={review.name}
-                borderRadius="full"
-                boxSize="100px"
-                mx="auto"
-                mb={4}
-              />
-              <Text fontWeight="bold" fontSize="lg" mb={2}>
-                {review.name}
-              </Text>
-              <Flex justify="center" mb={2}>
-                {Array(review.rating)
-                  .fill("")
-                  .map((_, i) => (
-                    <FaStar key={i} color="gold" />
-                  ))}
-              </Flex>
-              <Text color="gray.600">{review.review}</Text>
-            </Box>
-          ))}
-        </SimpleGrid>
+        {/* Featured Products */}
+        <Box mb={8}>
+          <Heading as="h3" size="xl" mb={6} textAlign="center" color="teal.600">
+            Featured Products
+          </Heading>
+          <Grid templateColumns={{ base: '1fr', md: 'repeat(3, 1fr)' }} gap={8}>
+            {[
+              { name: 'Eco Water Bottle', icon: FaWater, color: 'blue' },
+              { name: 'Solar Charger', icon: FaSun, color: 'orange' },
+              { name: 'Bamboo Cutlery Set', icon: FaLeaf, color: 'green' }
+            ].map((product, i) => (
+              <Box key={i} bg={cardBg} borderRadius="lg" overflow="hidden" boxShadow="md" transition="all 0.3s" _hover={{ transform: 'translateY(-5px)', boxShadow: 'xl' }}>
+                <Box bg={`${product.color}.100`} p={6} display="flex" justifyContent="center" alignItems="center">
+                  <product.icon size="80px" color={`${product.color}.500`} />
+                </Box>
+                <Box p={6}>
+                  <Heading as="h4" size="md" mb={2} color={`${product.color}.500`}>
+                    {product.name}
+                  </Heading>
+                  <Text mb={4} color={textColor}>Sustainable and eco-friendly solution for everyday use.</Text>
+                  <Button colorScheme={product.color} leftIcon={<FaShoppingCart />} w="100%">Add to Cart</Button>
+                </Box>
+              </Box>
+            ))}
+          </Grid>
+        </Box>
+
+        {/* Customer Reviews */}
+        <Box mb={8}>
+          <Heading as="h3" size="xl" mb={6} textAlign="center" color="teal.600">
+            Customer Reviews
+          </Heading>
+          <Grid templateColumns={{ base: '1fr', md: 'repeat(2, 1fr)' }} gap={8}>
+            {reviews.map((review) => (
+              <Box key={review.id} bg={cardBg} borderRadius="lg" p={6} boxShadow="md">
+                <HStack spacing={4} mb={4}>
+                  <Image
+                    src={review.photo}
+                    alt={review.name}
+                    borderRadius="full"
+                    boxSize="60px"
+                  />
+                  <VStack align="start" spacing={1}>
+                    <Text fontWeight="bold" fontSize="lg" color="teal.500">{review.name}</Text>
+                    <HStack>
+                      {Array(5)
+                        .fill('')
+                        .map((_, i) => (
+                          <FaStar
+                            key={i}
+                            color={i < review.rating ? 'gold' : 'gray.300'}
+                          />
+                        ))}
+                    </HStack>
+                  </VStack>
+                </HStack>
+                <Text color={textColor} fontStyle="italic">{review.text}</Text>
+              </Box>
+            ))}
+          </Grid>
+        </Box>
       </Box>
 
       {/* Footer */}
-      <Box bg="gray.800" color="white" py={10} px={{ base: 4, md: 10 }}>
-        <SimpleGrid columns={{ base: 1, md: 3 }} spacing={8}>
-          <VStack align="start">
-            <Heading size="md">ShopLogo</Heading>
-            <Text>Follow us on social media for the latest updates.</Text>
-            <HStack spacing={4}>
-              <IconButton
-                as="a"
-                href="#"
-                icon={<FaFacebook />}
-                aria-label="Facebook"
-                colorScheme="facebook"
-              />
-              <IconButton
-                as="a"
-                href="#"
-                icon={<FaInstagram />}
-                aria-label="Instagram"
-                colorScheme="pink"
-              />
-              <IconButton
-                as="a"
-                href="#"
-                icon={<FaTwitter />}
-                aria-label="Twitter"
-                colorScheme="twitter"
-              />
-            </HStack>
+      <Box as="footer" bgGradient={bgGradient} color="white" p={8}>
+        <Flex justify="space-between" wrap="wrap">
+          <VStack align="start" mb={{ base: 6, md: 0 }}>
+            <Heading as="h4" size="md" mb={2}>
+              EcoShop
+            </Heading>
+            <Text>Sustainable living, one product at a time.</Text>
+            <Text>© 2024 EcoShop. All rights reserved.</Text>
           </VStack>
-          <VStack align="start">
-            <Heading size="sm">Customer Service</Heading>
-            <Link href="#">Help Center</Link>
-            <Link href="#">Returns & Refunds</Link>
-            <Link href="#">Track Orders</Link>
-          </VStack>
-          <VStack align="start">
-            <Heading size="sm">Contact Us</Heading>
-            <Text>Email: support@shoplogo.com</Text>
-            <Text>Phone: +91 9876543210</Text>
-          </VStack>
-        </SimpleGrid>
-        <Divider my={4} borderColor="gray.600" />
-        <Text textAlign="center">© 2024 ShopLogo. All Rights Reserved.</Text>
+          <HStack spacing={8} align="start">
+            <VStack align="start">
+              <Heading as="h5" size="sm" mb={2}>Quick Links</Heading>
+              <Button variant="link" color="white">About Us</Button>
+              <Button variant="link" color="white">Our Products</Button>
+              <Button variant="link" color="white">Sustainability</Button>
+            </VStack>
+            <VStack align="start">
+              <Heading as="h5" size="sm" mb={2}>Customer Service</Heading>
+              <Button variant="link" color="white">Contact Us</Button>
+              <Button variant="link" color="white">FAQs</Button>
+              <Button variant="link" color="white">Shipping & Returns</Button>
+            </VStack>
+          </HStack>
+        </Flex>
       </Box>
     </Box>
   );
 };
 
-export default HomePage;
+export default App;
