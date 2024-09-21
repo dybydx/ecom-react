@@ -1,4 +1,4 @@
-import { useState } from 'react';
+import { useState, useEffect } from 'react';
 import {
   Box,
   Flex,
@@ -18,8 +18,9 @@ import {
   DrawerContent,
   DrawerCloseButton,
   useColorModeValue,
+  useToast,
 } from '@chakra-ui/react';
-import { FaStar, FaBars, FaTimes, FaShoppingCart, FaLeaf, FaSun, FaWater } from 'react-icons/fa';
+import { FaStar, FaBars, FaTimes, FaShoppingCart, FaLeaf, FaSun, FaWater, FaCreditCard } from 'react-icons/fa';
 
 const reviews = [
   { id: 1, name: 'John Doe', rating: 5, text: 'Absolutely love it!', photo: 'https://picsum.photos/seed/review1/50/50' },
@@ -31,6 +32,7 @@ const reviews = [
 const App = () => {
   const { isOpen, onOpen, onClose } = useDisclosure();
   const [displayBanner, setDisplayBanner] = useState(true);
+  const toast = useToast();
 
   const bgGradient = useColorModeValue(
     'linear(to-r, teal.300, blue.500)',
@@ -38,6 +40,44 @@ const App = () => {
   );
   const cardBg = useColorModeValue('white', 'gray.700');
   const textColor = useColorModeValue('gray.600', 'gray.200');
+
+  useEffect(() => {
+    const script = document.createElement('script');
+    script.src = 'https://checkout.razorpay.com/v1/checkout.js';
+    script.async = true;
+    document.body.appendChild(script);
+  }, []);
+
+  const handlePayment = () => {
+    const options = {
+      key: "YOUR_RAZORPAY_KEY", // Replace with your actual Razorpay key
+      amount: 50000, // Amount in paise (e.g., 50000 paise = ₹500)
+      currency: "INR",
+      name: "EcoShop",
+      description: "Purchase from EcoShop",
+      image: "https://your-company-logo.png", // Replace with your company logo
+      handler: function (response) {
+        toast({
+          title: "Payment Successful",
+          description: `Payment ID: ${response.razorpay_payment_id}`,
+          status: "success",
+          duration: 5000,
+          isClosable: true,
+        });
+      },
+      prefill: {
+        name: "Customer Name",
+        email: "customer@example.com",
+        contact: "9999999999"
+      },
+      theme: {
+        color: "#319795"
+      }
+    };
+
+    const paymentObject = new window.Razorpay(options);
+    paymentObject.open();
+  };
 
   return (
     <Box>
@@ -193,6 +233,18 @@ const App = () => {
               </Box>
             ))}
           </Grid>
+        </Box>
+
+        {/* Razorpay Payment Button */}
+        <Box textAlign="center" my={8}>
+          <Button
+            onClick={handlePayment}
+            colorScheme="teal"
+            size="lg"
+            leftIcon={<FaCreditCard />}
+          >
+            Make a Payment
+          </Button>
         </Box>
 
         {/* Customer Reviews */}
